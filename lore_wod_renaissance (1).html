@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lore — WoD Renaissance</title>
+<link href="https://fonts.googleapis.com/css2?family=Pirata+One&family=Cinzel:wght@400;600;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #010810;
+  --white: #e8f4fc;
+  --grey: #4a6a80;
+  --gold: #c8a84b;
+  --gold2: #f0d080;
+  --red2: #d04040;
+  --cyan2: #60d8f0;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { background:var(--bg); color:var(--white); font-family:'Crimson Text',serif; overflow-x:hidden; }
+
+#ocean-bg { position:fixed; inset:0; z-index:0; pointer-events:none; }
+.vignette { position:fixed; inset:0; z-index:1; pointer-events:none; background:radial-gradient(ellipse 80% 80% at 50% 50%,transparent 40%,rgba(1,8,16,0.75) 100%); }
+
+/* INTRO */
+#intro {
+  position:fixed; inset:0; z-index:100;
+  background:#010810;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  transition:opacity 1.2s;
+}
+#intro.fade-out { opacity:0; pointer-events:none; }
+.intro-skull { font-size:5rem; margin-bottom:1.5rem; animation:pulse 2.5s infinite; filter:drop-shadow(0 0 30px rgba(200,168,75,0.5)); }
+.intro-title { font-family:'Pirata One',cursive; font-size:clamp(2rem,6vw,4.5rem); color:var(--gold2); text-shadow:0 0 50px rgba(200,168,75,0.4); margin-bottom:0.4rem; }
+.intro-sub { font-family:'Cinzel',serif; font-size:0.6rem; letter-spacing:6px; color:rgba(200,168,75,0.45); text-transform:uppercase; margin-bottom:3rem; }
+.intro-btn {
+  padding:0.9rem 3rem; font-family:'Cinzel',serif; font-size:0.68rem; letter-spacing:4px;
+  text-transform:uppercase; background:transparent;
+  border:1px solid rgba(200,168,75,0.4); color:var(--gold2); cursor:pointer;
+  transition:all 0.4s; animation:fadeIn 1.2s 0.8s both;
+}
+.intro-btn:hover { background:rgba(200,168,75,0.1); box-shadow:0 0 30px rgba(200,168,75,0.12); border-color:var(--gold); }
+@keyframes pulse { 0%,100%{transform:scale(1) rotate(-2deg)} 50%{transform:scale(1.06) rotate(2deg)} }
+
+/* MAIN */
+#main { position:relative; z-index:2; }
+
+/* HERO */
+#hero {
+  min-height:100vh; display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  text-align:center; padding:4rem 2rem; position:relative;
+}
+#hero::after { content:''; position:absolute; bottom:0; left:0; right:0; height:250px; background:linear-gradient(transparent,var(--bg)); pointer-events:none; }
+.hero-eye { font-family:'Cinzel',serif; font-size:0.55rem; letter-spacing:8px; color:var(--gold); text-transform:uppercase; margin-bottom:1.5rem; opacity:0; animation:fadeUp 1s 0.4s forwards; }
+.hero-title { font-family:'Pirata One',cursive; font-size:clamp(3.5rem,12vw,10rem); color:var(--white); line-height:0.88; text-shadow:0 0 80px rgba(200,168,75,0.15),0 4px 20px rgba(0,0,0,0.9); opacity:0; animation:fadeUp 1.2s 0.7s forwards; }
+.hero-title .g { color:var(--gold2); text-shadow:0 0 50px rgba(200,168,75,0.5); }
+.hdiv { display:flex; align-items:center; gap:1.5rem; margin:2.2rem auto; max-width:460px; opacity:0; animation:fadeIn 1s 1.3s forwards; }
+.hdiv::before,.hdiv::after { content:''; flex:1; height:1px; background:linear-gradient(90deg,transparent,rgba(200,168,75,0.35),transparent); }
+.hdiv span { color:var(--gold); font-size:1.3rem; }
+.hero-sub { font-style:italic; font-size:clamp(0.95rem,1.8vw,1.2rem); color:rgba(200,220,240,0.45); max-width:580px; line-height:2; opacity:0; animation:fadeUp 1s 1.5s forwards; }
+.hero-scroll { position:absolute; bottom:2.5rem; left:50%; transform:translateX(-50%); font-family:'Cinzel',serif; font-size:0.48rem; letter-spacing:4px; color:rgba(255,255,255,0.18); text-transform:uppercase; opacity:0; animation:fadeIn 1s 2.2s forwards; }
+
+/* CHAPTERS */
+.chapter { max-width:860px; margin:0 auto; padding:6rem 2rem; position:relative; opacity:0; transform:translateY(30px); transition:opacity 1s,transform 1s; }
+.chapter.visible { opacity:1; transform:translateY(0); }
+.ch-bg-num { font-family:'Pirata One',cursive; font-size:9rem; position:absolute; left:-1rem; top:3.5rem; color:rgba(200,168,75,0.035); pointer-events:none; user-select:none; line-height:1; }
+.ch-label { font-family:'Cinzel',serif; font-size:0.5rem; letter-spacing:6px; color:var(--gold); text-transform:uppercase; margin-bottom:0.7rem; display:block; opacity:0.65; }
+.ch-title { font-family:'Pirata One',cursive; font-size:clamp(1.8rem,4.5vw,3.8rem); line-height:1.05; margin-bottom:2.5rem; position:relative; }
+.ch-title::after { content:''; display:block; width:55px; height:2px; margin-top:1rem; background:var(--gold); }
+.ch-title .a { color:var(--gold2); }
+.ch-title .r { color:var(--red2); }
+.ch-title .c { color:var(--cyan2); }
+
+.ch-text { font-size:1.12rem; line-height:2.1; color:rgba(215,232,245,0.72); margin-bottom:1.6rem; }
+.ch-text.dc::first-letter { font-family:'Pirata One',cursive; font-size:4.8rem; float:left; line-height:0.75; margin:0.08em 0.1em 0 0; color:var(--gold); text-shadow:0 0 20px rgba(200,168,75,0.45); }
+.ch-text em { color:var(--gold); font-style:italic; }
+
+/* PULL QUOTE */
+.pq { border-left:2px solid rgba(200,168,75,0.5); padding:1.2rem 2rem; margin:2.5rem 0; background:rgba(200,168,75,0.03); position:relative; }
+.pq::before { content:'"'; font-family:'Pirata One',cursive; font-size:5rem; color:rgba(200,168,75,0.12); position:absolute; top:-1rem; left:0.8rem; line-height:1; }
+.pq p { font-style:italic; font-size:1.1rem; color:rgba(215,232,245,0.55); line-height:2; }
+
+/* EMPERORS */
+.emp-row { display:grid; grid-template-columns:repeat(3,1fr); gap:1.2rem; margin:2.5rem 0; }
+@media(max-width:580px){ .emp-row{grid-template-columns:1fr;} }
+.emp-card { padding:1.6rem 1.3rem; text-align:center; border:1px solid rgba(255,255,255,0.05); background:rgba(1,10,22,0.9); position:relative; overflow:hidden; opacity:0; transform:scale(0.94); transition:opacity 0.8s,transform 0.8s; }
+.emp-card.visible { opacity:1; transform:scale(1); }
+.emp-card:hover { transform:scale(1.02) !important; }
+.emp-card.fire { border-color:rgba(220,70,20,0.3); }
+.emp-card.earth { border-color:rgba(140,110,30,0.3); }
+.emp-card.sea { border-color:rgba(20,160,210,0.3); }
+.emp-ico { font-size:2.4rem; margin-bottom:0.8rem; display:block; }
+.emp-n { font-family:'Pirata One',cursive; font-size:1.05rem; margin-bottom:0.5rem; }
+.emp-card.fire .emp-n { color:#f06030; }
+.emp-card.earth .emp-n { color:#c09040; }
+.emp-card.sea .emp-n { color:var(--cyan2); }
+.emp-d { font-size:0.88rem; color:rgba(190,215,235,0.42); font-style:italic; line-height:1.75; }
+
+/* FACTIONS */
+.factions { display:grid; grid-template-columns:repeat(auto-fill,minmax(270px,1fr)); gap:1.4rem; margin:2.5rem 0; }
+.fc { background:rgba(1,12,26,0.85); border:1px solid rgba(255,255,255,0.055); padding:2rem 1.7rem; position:relative; overflow:hidden; opacity:0; transform:translateY(18px); transition:opacity 0.7s,transform 0.7s,border-color 0.3s; }
+.fc.visible { opacity:1; transform:translateY(0); }
+.fc:hover { transform:translateY(-4px) !important; }
+.fc::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; }
+.fc.marine::before { background:linear-gradient(90deg,transparent,#2a6dd9,transparent); }
+.fc.gouv::before { background:linear-gradient(90deg,transparent,#8b3a8b,transparent); }
+.fc.pirates::before { background:linear-gradient(90deg,transparent,var(--gold),transparent); }
+.fc.revo::before { background:linear-gradient(90deg,transparent,var(--red2),transparent); }
+.fc.noble::before { background:linear-gradient(90deg,transparent,var(--cyan2),transparent); }
+.fc-ico { font-size:2rem; margin-bottom:0.9rem; display:block; }
+.fc-name { font-family:'Pirata One',cursive; font-size:1.35rem; margin-bottom:0.8rem; }
+.fc.marine .fc-name { color:#5a9df9; }
+.fc.gouv .fc-name { color:#c06ac0; }
+.fc.pirates .fc-name { color:var(--gold2); }
+.fc.revo .fc-name { color:var(--red2); }
+.fc.noble .fc-name { color:var(--cyan2); }
+.fc-txt { font-size:0.94rem; line-height:1.88; color:rgba(195,218,235,0.58); }
+
+/* POEM */
+.poem { text-align:center; padding:3rem 2rem; margin:3rem 0; border-top:1px solid rgba(200,168,75,0.08); border-bottom:1px solid rgba(200,168,75,0.08); position:relative; }
+.poem::before { content:'⚓'; position:absolute; top:-0.9rem; left:50%; transform:translateX(-50%); background:var(--bg); padding:0 1rem; color:rgba(200,168,75,0.25); font-size:1.1rem; }
+.poem p { font-style:italic; font-size:1.1rem; color:rgba(190,215,235,0.38); line-height:2.3; }
+.poem p.hl { color:rgba(200,168,75,0.65); font-size:1.25rem; }
+.poem p.big { color:rgba(215,232,245,0.55); font-size:1.15rem; }
+
+/* FINALE */
+#finale { text-align:center; padding:8rem 2rem 5rem; position:relative; z-index:2; }
+.fin-skull { font-size:4rem; filter:drop-shadow(0 0 25px rgba(200,168,75,0.35)); margin-bottom:1.5rem; display:block; }
+.fin-title { font-family:'Pirata One',cursive; font-size:clamp(2rem,5vw,4rem); color:var(--gold2); text-shadow:0 0 40px rgba(200,168,75,0.3); margin-bottom:0.8rem; }
+.fin-sub { font-style:italic; color:rgba(190,215,235,0.35); font-size:1.1rem; }
+
+/* BY MANATSU */
+.bym { text-align:center; padding:1rem 0 4rem; position:relative; z-index:2; }
+.bym .by { font-family:'Cinzel',serif; font-size:0.55rem; letter-spacing:5px; color:rgba(200,168,75,0.28); text-transform:uppercase; display:block; }
+.bym .name { font-family:'Pirata One',cursive; font-size:2.8rem; color:rgba(200,168,75,0.45); }
+.bym .lore-by { display:block; font-family:'Cinzel',serif; font-size:0.65rem; letter-spacing:4px; color:rgba(200,168,75,0.35); text-transform:uppercase; margin-top:0.5rem; }
+.bym .lore-by strong { color:rgba(200,168,75,0.6); font-weight:600; }
+
+.ch-sep { max-width:860px; margin:0 auto; height:1px; background:linear-gradient(90deg,transparent,rgba(200,168,75,0.12),transparent); position:relative; z-index:2; }
+
+@keyframes fadeUp { from{opacity:0;transform:translateY(25px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+@media(max-width:700px){ .ch-bg-num{display:none;} .factions{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+
+<canvas id="ocean-bg"></canvas>
+<div class="vignette"></div>
+
+<!-- INTRO SCREEN -->
+<div id="intro">
+  <div class="intro-skull">☠</div>
+  <div class="intro-title">WoD Renaissance</div>
+  <div class="intro-sub">World of Dreams · Le Monde Vous Attend</div>
+  <div class="intro-credits">
+    <span class="ic-by">Site by <strong>Manatsu</strong></span>
+    <span class="ic-sep">·</span>
+    <span class="ic-by">Lore by <strong>Hyzen</strong></span>
+  </div>
+  <button class="intro-btn" id="enterBtn">⚓ &nbsp; Entrer dans le Monde &nbsp; ⚓</button>
+</div>
+
+<div id="main">
+
+  <!-- HERO -->
+  <section id="hero">
+    <p class="hero-eye">☠ &nbsp; Chroniques du Nouveau Monde &nbsp; ☠</p>
+    <h1 class="hero-title">World<br>of <span class="g">Dreams</span></h1>
+    <div class="hdiv"><span>⚓</span></div>
+    <p class="hero-sub">Les océans gardent leurs secrets. Les vagues murmurent des noms oubliés.<br>Et quelque part, entre les flots et les tempêtes, une nouvelle ère commence.</p>
+    <div class="hero-scroll">↓ &nbsp; Parcourir le Lore &nbsp; ↓</div>
+  </section>
+
+  <!-- CH I -->
+  <div class="ch-sep"></div>
+  <section class="chapter">
+    <div class="ch-bg-num">I</div>
+    <span class="ch-label">Chapitre Premier</span>
+    <h2 class="ch-title">L'Ère d'Or <span class="a">Révolue</span></h2>
+    <p class="ch-text dc">Autrefois, une Ère d'Or dominait les flots. Un homme s'était élevé au-dessus de tous — le titre de <em>Roi des Pirates</em> lui fut donné. Mais ce n'était pas tout. Trois autres individus virent le jour, et chacun d'eux allait faire changer le monde. Les quatre Empereurs des Mers. Les quatre plus grandes puissances du monde pirate, capables de rivaliser avec le monde entier s'ils l'avaient voulu.</p>
+    <p class="ch-text">Mais la fin arriva pour cette époque d'or que tout le monde avait connue avec joie et paix. Le Roi des Pirates tomba — capturé, mis à genoux par ce qui prétend incarner la justice. Il prononça ses dernières paroles.</p>
+    <div class="pq">
+      <p>Ces dernières paroles ne furent ni excuses ni regrets. Elles furent une étincelle. En un instant, le monde bascula. Des milliers de rêveurs prirent la mer. Des royaumes tremblèrent. La piraterie, autrefois marginale, devint un raz-de-marée incontrôlable.</p>
+    </div>
+    <p class="ch-text">Puis vint la disparition des autres rêveurs du passé. L'ère d'or ne serait plus qu'un souvenir — et une promesse.</p>
+  </section>
+
+  <!-- CH II -->
+  <div class="ch-sep"></div>
+  <section class="chapter">
+    <div class="ch-bg-num">II</div>
+    <span class="ch-label">Chapitre Second</span>
+    <h2 class="ch-title">La Chute d'une <span class="r">Puissance</span></h2>
+    <p class="ch-text dc">Durant cette période, quatre grandes puissances pirates dominaient les océans, régnant chacune sur une portion du monde maritime. Mais l'équilibre ne pouvait durer. L'une d'elles s'effondra. Sa bannière disparut. Ses territoires furent disputés. Son nom ne résonne plus que comme un écho dans les tavernes de ports oubliés.</p>
+    <p class="ch-text">Depuis, trois grandes puissances demeurent… du moins officiellement.</p>
+    <div class="emp-row">
+      <div class="emp-card fire">
+        <span class="emp-ico">🔥</span>
+        <div class="emp-n">L'Embraseur</div>
+        <p class="emp-d">Laisse derrière elle des flammes et des cendres. Le ciel brûle à son passage.</p>
+      </div>
+      <div class="emp-card earth">
+        <span class="emp-ico">⚡</span>
+        <div class="emp-n">Le Séisme</div>
+        <p class="emp-d">Fait trembler la terre. Le monde lui-même plie sous sa volonté.</p>
+      </div>
+      <div class="emp-card sea">
+        <span class="emp-ico">🌊</span>
+        <div class="emp-n">L'Abyssal</div>
+        <p class="emp-d">Règne sous les mers. Silencieux, insaisissable — peut-être déjà disparu.</p>
+      </div>
+    </div>
+    <p class="ch-text">Certains disent que le troisième n'est plus qu'une rumeur. D'autres jurent avoir vu son ombre sous les vagues.</p>
+  </section>
+
+  <!-- CH III -->
+  <div class="ch-sep"></div>
+  <section class="chapter">
+    <div class="ch-bg-num">III</div>
+    <span class="ch-label">Chapitre Troisième</span>
+    <h2 class="ch-title">Les Grandes <span class="a">Factions</span></h2>
+    <p class="ch-text">Cinq forces façonnent le destin du monde. Chacune porte ses convictions, ses ambitions et ses secrets. Aucune n'est entièrement juste. Aucune n'est entièrement corrompue.</p>
+    <div class="factions">
+      <div class="fc marine">
+        <span class="fc-ico">⚓</span>
+        <div class="fc-name">La Marine</div>
+        <p class="fc-txt">Force armée mondiale. Elle représente l'ordre, la loi et la justice officielle. Ses bases parsèment les mers comme des phares inversés — au lieu de guider, elles surveillent. Elle protège les royaumes alliés et maintient un équilibre fragile entre autorité et oppression. Parfois, cet équilibre est brisé par l'un des siens.</p>
+      </div>
+      <div class="fc gouv">
+        <span class="fc-ico">👁️</span>
+        <div class="fc-name">Le Gouvernement Mondial</div>
+        <p class="fc-txt">Entité politique gigantesque, invisible pour le commun des mortels mais omniprésente dans les décisions majeures. Il contrôle l'histoire, dicte les lois et efface parfois des vérités entières des archives. Sa puissance réside dans l'information qu'il choisit de révéler… ou d'enterrer.</p>
+      </div>
+      <div class="fc pirates">
+        <span class="fc-ico">☠</span>
+        <div class="fc-name">Les Pirates</div>
+        <p class="fc-txt">Ils ne forment pas une armée unifiée mais une myriade d'équipages et d'alliances temporaires. Certains cherchent la gloire. D'autres la richesse. Quelques-uns seulement cherchent la vérité. Criminels, aventuriers et symboles de liberté à la fois.</p>
+      </div>
+      <div class="fc revo">
+        <span class="fc-ico">✊</span>
+        <div class="fc-name">Les Révolutionnaires</div>
+        <p class="fc-txt">Agissant dans l'ombre, ils ne convoitent pas les mers mais le système lui-même. Leur combat n'est pas pour un trésor, mais pour renverser l'ordre établi. Ils avancent silencieusement, mais chaque royaume qu'ils touchent change à jamais.</p>
+      </div>
+      <div class="fc noble">
+        <span class="fc-ico">👑</span>
+        <div class="fc-name">Les Primordiaux</div>
+        <p class="fc-txt">La noblesse — nommée les Primordiaux. Un statut élevé, une autorité que même la Marine protège. Piliers de l'économie mondiale. Ils naissent avec l'or et les ressources pour régner. Certains cachent leurs crimes. D'autres se battent contre leurs propres racines — signe de vraie liberté.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CH IV -->
+  <div class="ch-sep"></div>
+  <section class="chapter">
+    <div class="ch-bg-num">IV</div>
+    <span class="ch-label">Chapitre Final</span>
+    <h2 class="ch-title">Le Monde <span class="c">en Suspens</span></h2>
+    <p class="ch-text dc">Aujourd'hui, le monde se tient dans un équilibre instable. Les océans sont traversés par des navires à la recherche de l'aventure ou de la richesse. Et une catastrophe n'est jamais loin.</p>
+    <div class="poem">
+      <p>On entend le bruit du vent qui crie.</p>
+      <p>La mer qui s'agite au passage de tant de navires.</p>
+      <p>La terre qui se rend silencieuse.</p>
+      <br>
+      <p class="hl">Le passé et le présent s'entrechoquent.</p>
+      <br>
+      <p class="big">Un trésor. &nbsp;·&nbsp; Des valeurs. &nbsp;·&nbsp; L'injustice.</p>
+    </div>
+    <p class="ch-text">Sur et certain — le monde attend le début du nouveau cycle. Et ce jour-là, un seul individu règnera à nouveau sur le monde entier.</p>
+    <div class="pq">
+      <p>Le secret du nouveau monde est là, quelque part entre les flots. Il attend celui qui osera tout risquer pour le trouver.</p>
+    </div>
+  </section>
+
+  <div id="finale">
+    <span class="fin-skull">☠</span>
+    <h2 class="fin-title">Le Monde Vous Attend</h2>
+    <p class="fin-sub">Quelle que soit votre voie — pirate, marine, révolutionnaire — l'histoire n'est pas encore écrite.</p>
+  </div>
+
+  <div class="bym">
+    <span class="by">by</span>
+    <span class="name">Manatsu</span>
+    <span class="lore-by">Lore by <strong>Hyzen</strong></span>
+  </div>
+
+</div>
+
+<script>
+// ═══ OCEAN CANVAS ═══
+const canvas = document.getElementById('ocean-bg');
+const ctx = canvas.getContext('2d');
+let W,H,t=0;
+function resize(){ W=canvas.width=window.innerWidth; H=canvas.height=window.innerHeight; }
+resize(); window.addEventListener('resize',resize);
+
+function drawOcean(){
+  const g=ctx.createLinearGradient(0,0,0,H);
+  g.addColorStop(0,'#010810'); g.addColorStop(0.55,'#021428'); g.addColorStop(1,'#010c1e');
+  ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+}
+
+function drawCaustics(t){
+  for(let i=0;i<9;i++){
+    const x=(W*(i/9+0.05))+Math.sin(t*0.32+i*1.5)*90;
+    const y=H*0.5+Math.sin(t*0.22+i*1.0)*H*0.28;
+    const r=55+Math.sin(t*0.42+i)*32;
+    const g=ctx.createRadialGradient(x,y,0,x,y,r);
+    g.addColorStop(0,`rgba(0,130,210,${0.032+Math.sin(t*0.5+i)*0.014})`);
+    g.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); ctx.fillStyle=g; ctx.fill();
+  }
+}
+
+class Bubble{
+  constructor(){ this.reset(true); }
+  reset(init){
+    this.x=Math.random()*W; this.y=init?Math.random()*H:H+15;
+    this.r=Math.random()*11+1.5;
+    this.sy=-(Math.random()*0.65+0.13); this.sx=Math.random()*0.22-0.11;
+    this.w=Math.random()*Math.PI*2; this.ws=Math.random()*0.022+0.007;
+    this.a=Math.random()*0.2+0.04; this.life=1; this.decay=Math.random()*0.0006+0.0001;
+  }
+  update(){ this.w+=this.ws; this.x+=this.sx+Math.sin(this.w)*0.45; this.y+=this.sy; this.life-=this.decay; if(this.y<-20||this.life<=0)this.reset(false); }
+  draw(){
+    const a=this.a*this.life;
+    ctx.beginPath(); ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
+    ctx.strokeStyle=`rgba(70,170,255,${a*0.85})`; ctx.lineWidth=0.7; ctx.stroke();
+    ctx.beginPath(); ctx.arc(this.x-this.r*0.27,this.y-this.r*0.27,this.r*0.3,0,Math.PI*2);
+    ctx.fillStyle=`rgba(170,225,255,${a*0.42})`; ctx.fill();
+    ctx.beginPath(); ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(8,55,115,${a*0.06})`; ctx.fill();
+  }
+}
+
+class Sparkle{
+  constructor(){ this.reset(true); }
+  reset(init){
+    this.x=Math.random()*W; this.y=init?Math.random()*H:H+5;
+    this.s=Math.random()*1.9+0.25; this.sy=-(Math.random()*0.32+0.04); this.sx=Math.random()*0.16-0.08;
+    this.a=Math.random()*0.26+0.04; this.life=1; this.decay=Math.random()*0.0011+0.00018;
+    this.hue=Math.random()*50+183;
+  }
+  update(){ this.x+=this.sx+Math.sin(this.y*0.009)*0.07; this.y+=this.sy; this.life-=this.decay; if(this.y<-5||this.life<=0)this.reset(false); }
+  draw(){ ctx.beginPath(); ctx.arc(this.x,this.y,this.s,0,Math.PI*2); ctx.fillStyle=`hsla(${this.hue},78%,72%,${this.a*this.life})`; ctx.fill(); }
+}
+
+class Wave{
+  constructor(o){ Object.assign(this,o); this.off=Math.random()*Math.PI*2; }
+  draw(t){
+    ctx.beginPath();
+    const yb=this.yf*H; ctx.moveTo(0,yb);
+    for(let x=0;x<=W;x+=3){
+      const y=yb+Math.sin(x*this.f1+t*this.s1+this.off)*this.a1+Math.sin(x*this.f2+t*this.s2+this.off*1.6)*this.a2+Math.sin(x*this.f3+t*this.s3)*this.a3;
+      ctx.lineTo(x,y);
+    }
+    ctx.lineTo(W,H); ctx.lineTo(0,H); ctx.closePath(); ctx.fillStyle=this.col; ctx.fill();
+    ctx.beginPath(); ctx.moveTo(0,yb);
+    for(let x=0;x<=W;x+=3){
+      const y=yb+Math.sin(x*this.f1+t*this.s1+this.off)*this.a1+Math.sin(x*this.f2+t*this.s2+this.off*1.6)*this.a2+Math.sin(x*this.f3+t*this.s3)*this.a3;
+      ctx.lineTo(x,y);
+    }
+    ctx.strokeStyle=this.foam; ctx.lineWidth=1.5; ctx.stroke();
+  }
+}
+
+const waves=[
+  new Wave({yf:0.87,f1:0.008,f2:0.015,f3:0.005,a1:18,a2:9,a3:25,s1:0.45,s2:0.75,s3:0.25,col:'rgba(1,18,44,0.4)',foam:'rgba(70,150,255,0.055)'}),
+  new Wave({yf:0.91,f1:0.011,f2:0.018,f3:0.007,a1:14,a2:7,a3:19,s1:0.65,s2:0.58,s3:0.32,col:'rgba(1,13,32,0.52)',foam:'rgba(90,170,255,0.065)'}),
+  new Wave({yf:0.94,f1:0.013,f2:0.021,f3:0.008,a1:11,a2:5,a3:14,s1:0.85,s2:0.95,s3:0.38,col:'rgba(1,9,23,0.62)',foam:'rgba(110,190,255,0.08)'}),
+  new Wave({yf:0.97,f1:0.01, f2:0.017,f3:0.006,a1:8, a2:4,a3:10,s1:0.55,s2:1.15,s3:0.28,col:'rgba(1,6,15,0.72)',foam:'rgba(140,210,255,0.095)'}),
+];
+
+const bubbles=Array.from({length:85},()=>new Bubble());
+const sparkles=Array.from({length:170},()=>new Sparkle());
+
+function animate(){
+  t+=0.01; ctx.clearRect(0,0,W,H);
+  drawOcean(); drawCaustics(t);
+  sparkles.forEach(p=>{p.update();p.draw();});
+  bubbles.forEach(b=>{b.update();b.draw();});
+  waves.forEach(w=>w.draw(t));
+  requestAnimationFrame(animate);
+}
+animate();
+
+// INTRO
+document.getElementById('enterBtn').addEventListener('click',()=>{
+  document.getElementById('intro').classList.add('fade-out');
+  setTimeout(()=>document.getElementById('intro').style.display='none',1300);
+});
+
+// REVEAL
+const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');}),{threshold:0.06});
+document.querySelectorAll('.chapter,.fc,.emp-card').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
